@@ -16,6 +16,8 @@ class Contact {
 
   Contact({this.id, required this.firstname, required this.lastname, required this.emailAddress});
 
+
+
   Contact.fromMap(Map<String, dynamic> map){
     id = map[ContactFields.id];
     firstname = map[ContactFields.firstname];
@@ -32,5 +34,10 @@ class Contact {
     };
 
     return map;
+  }
+
+  @override
+  String toString() {
+    return "ID : $id\nFirstname : $firstname\nLastname : $lastname\nEmail Address : $emailAddress";
   }
 }

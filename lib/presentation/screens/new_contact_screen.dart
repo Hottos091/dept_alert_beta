@@ -1,17 +1,21 @@
+import 'package:dept_alert_beta/bloc/contact_bloc.dart';
+import 'package:dept_alert_beta/events/contact_event.dart';
 import 'package:flutter/material.dart';
 import 'package:dept_alert_beta/model/contact.dart';
 import 'package:dept_alert_beta/model/databaseClientTest.dart';
+import 'package:dept_alert_beta/widgets/contacts_list.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NewCustomerContainer extends StatefulWidget {
-  final BuildContext dialogContext;
+class NewContactScreen extends StatefulWidget {
+  final String title;
 
-  const NewCustomerContainer({Key? key, required this.dialogContext}) : super(key: key);
+  const NewContactScreen({Key? key, required this.title}) : super(key: key);
 
   @override
-  State<NewCustomerContainer> createState() => _NewCustomerContainerState();
+  State<NewContactScreen> createState() => _NewContactScreenState();
 }
 
-class _NewCustomerContainerState extends State<NewCustomerContainer> {
+class _NewContactScreenState extends State<NewContactScreen> {
   late TextEditingController firstnameTextEditingController;
   late TextEditingController lastnameTextEditingController;
   late TextEditingController emailAddressTextEditingController;
@@ -28,28 +32,21 @@ class _NewCustomerContainerState extends State<NewCustomerContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Ajouter un contact'),
-      content: getInputContent(),
-      actions: <Widget>[
-        TextButton(
-          child: const Text('Annuler', style: TextStyle(color: Colors.red)),
-          onPressed: () {
-            Navigator.of(widget.dialogContext).pop(); // Dismiss alert dialog
-          },
-        ),
-        TextButton(
-          child: const Text('Confirmer', style: TextStyle(color: Colors.blue)),
-          onPressed: () {
-            addContact();
-            Navigator.of(widget.dialogContext).pop();
-            setState(() {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title)),
+        body: Column(children: [
+          getInputContent(),
 
-            });// Dismiss alert dialog
-          },
-        ),
-      ],
+          TextButton(
+            child: const Text('Confirmer', style: TextStyle(color: Colors.blue)),
+            onPressed: () {
+              addContactBloc();
+            },
+          ),
 
+          const ContactList(),
+        ],
+      ),
     );
   }
 
@@ -58,8 +55,13 @@ class _NewCustomerContainerState extends State<NewCustomerContainer> {
     print('[IN] AddContact() : contact.id = ${contact.id}');
     await DatabaseClient.instance.insertContact(contact);
   }
+  void addContactBloc() async {
+    Contact newContact = Contact(firstname: getFirstname(), lastname: getLastname(), emailAddress: getEmailAddress());
+    print('[addContactBloc] New contact : $newContact');
 
-  Card getInputContent() {
+    BlocProvider.of<ContactBloc>(context).add(AddContactEvent(contact: newContact));
+  }
+  Card getInputContent() {//TODO create a "class extends StatelessWidget" with this
     return Card(
         child: Column(
             children: [
