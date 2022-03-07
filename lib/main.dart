@@ -1,13 +1,21 @@
-import 'package:dept_alert_beta/bloc/contact_bloc.dart';
 import 'package:dept_alert_beta/presentation/screens/new_contact_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:dept_alert_beta/presentation/screens/home_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dept_alert_beta/presentation/router/app_router.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
+import 'logic/bloc/contact_bloc.dart';
 import 'model/contact.dart';
 
 Future<void> main() async {
+  
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final HydratedStorage storage = await HydratedStorage.build(
+    storageDirectory: await getApplicationDocumentsDirectory()
+  );
+
   runApp(MyApp(
     appRouter: AppRouter(),
     ));

@@ -1,5 +1,5 @@
-import 'package:dept_alert_beta/bloc/contact_bloc.dart';
 import 'package:dept_alert_beta/events/contact_event.dart';
+import 'package:dept_alert_beta/logic/bloc/contact_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:dept_alert_beta/model/contact.dart';
 import 'package:dept_alert_beta/model/databaseClientTest.dart';

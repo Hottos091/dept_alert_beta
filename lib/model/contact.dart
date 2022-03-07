@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 const String tableContacts = 'contact';
 
 class ContactFields {
@@ -8,15 +10,16 @@ class ContactFields {
 }
 
 class Contact {
-  //static int contactCpt = 0;
-  late final int? id;
+  static int contactCpt = 0;
+  late final int id;
   late final String firstname;
   late final String lastname;
   late final String emailAddress;
 
-  Contact({this.id, required this.firstname, required this.lastname, required this.emailAddress});
-
-
+  Contact({required this.firstname, required this.lastname, required this.emailAddress}) {
+    id = contactCpt;
+    contactCpt++;
+  }
 
   Contact.fromMap(Map<String, dynamic> map){
     id = map[ContactFields.id];
@@ -25,19 +28,38 @@ class Contact {
     emailAddress = map[ContactFields.emailAddress];
   }
 
+  Contact.fromMapEntry(MapEntry<String, dynamic> mapEntry){
+    id = int.parse(mapEntry.key);
+    firstname = mapEntry.value[ContactFields.firstname];
+    lastname = mapEntry. value[ContactFields.lastname];
+    emailAddress = mapEntry.value[ContactFields.emailAddress];
+  }
+
   Map<String, dynamic> toMap() {
-    Map<String, dynamic> map = {
+    return {
+      'id': id,
       'firstname': firstname,
       'lastname': lastname,
-      'email_address': emailAddress,
-      '_id': id
+      'emailAddress': emailAddress,
     };
+  }
 
-    return map;
+  dynamic getListMap(List<dynamic> items) {
+    //if (items == null) return null;
+    List<Map<String, dynamic>> contactItems = [];
+    for (var element in items) {
+      contactItems.add(element.toMap());
+    }
+
+    return contactItems;
   }
 
   @override
   String toString() {
     return "ID : $id\nFirstname : $firstname\nLastname : $lastname\nEmail Address : $emailAddress";
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory Contact.fromJson(String source) => Contact.fromMap(json.decode(source));
 }
