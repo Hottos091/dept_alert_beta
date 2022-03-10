@@ -1,4 +1,4 @@
-import 'package:dept_alert_beta/events/contact_event.dart';
+import 'package:dept_alert_beta/events/contact_list_event.dart';
 import 'package:dept_alert_beta/model/contact.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,7 +1,6 @@
 import 'package:dept_alert_beta/model/databaseClientTest.dart';
 import 'package:flutter/material.dart';
 import 'package:dept_alert_beta/model/contact.dart';
-import 'package:dept_alert_beta/widgets/newCustomerContainer.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:async/async.dart';
 
@@ -20,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchContacts();
+    //fetchContacts();
   }
 
   @override
@@ -29,9 +28,11 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: Text(widget.title),
-        actions: <Widget>[
-          ElevatedButton(
-              onPressed: showAddContactDialog, child: const Text("Add"))
+        actions: const <Widget>[
+           ElevatedButton(
+              onPressed: null, 
+               child:  Text("Add")
+              ),
         ],
       ),
       body: (contacts.isEmpty)
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),*/
   }
 
-  Future showAddContactDialog() async {
+  /*Future showAddContactDialog() async {
     await showDialog(
       context: context,
       barrierDismissible: false,
@@ -67,13 +68,13 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
     fetchContacts();
-  }
+  }*/
 
-  void fetchContacts() {
+  /*void fetchContacts() {
     DatabaseClient.instance.getAllContacts().then((contacts) {
       setState(() {
         this.contacts = contacts;
       });
     });
-  }
+  }*/
 }

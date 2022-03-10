@@ -16,8 +16,7 @@ class Contact {
   late final String lastname;
   late final String emailAddress;
 
-  Contact({required this.firstname, required this.lastname, required this.emailAddress}) {
-    id = contactCpt;
+  Contact({required this.id, required this.firstname, required this.lastname, required this.emailAddress}) {
     contactCpt++;
   }
 
@@ -62,4 +61,17 @@ class Contact {
   String toJson() => json.encode(toMap());
 
   factory Contact.fromJson(String source) => Contact.fromMap(json.decode(source));
+  
+  Contact copyWith({int? id, String? firstname, String? lastname, String? emailAddress}) {
+    return Contact(
+      id: id ?? this.id,
+      firstname: firstname ?? this.firstname,
+      lastname: lastname ?? this.lastname,
+      emailAddress: emailAddress ?? this.emailAddress,
+    );
+  }
+  
+  @override
+  // ignore: override_on_non_overriding_member
+  List<Object> get props => [id, firstname, lastname, emailAddress];
 }

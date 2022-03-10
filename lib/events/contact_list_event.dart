@@ -2,24 +2,24 @@ import 'package:dept_alert_beta/model/contact.dart';
 
 abstract class ContactEvent {
   Contact? contact;
-  int? contactIndex;
+  int? contactId;
 
   ContactEvent({
     this.contact,
-    this.contactIndex,
+    this.contactId,
   });
 }
 
-class AddContactEvent extends ContactEvent {
-  AddContactEvent({required Contact contact}) : super(contact: contact);
+class ContactListContactAdded extends ContactEvent {
+  ContactListContactAdded({required Contact contact}) : super(contact: contact);
 }
 
-class DeleteContactEvent extends ContactEvent {
-  DeleteContactEvent({required int contactIndex}) : super(contactIndex: contactIndex);
+class ContactListContactDeleted extends ContactEvent {
+  ContactListContactDeleted({required int contactId}) : super(contactId: contactId);
 }
 
-class UpdateContactEvent extends ContactEvent {
-  UpdateContactEvent({required Contact contact}) : super(contact: contact);
+class ContactListContactUpdated extends ContactEvent {
+  ContactListContactUpdated({required Contact contact}) : super(contact: contact);
 }
 
 /*enum EventType {add, delete, update}
