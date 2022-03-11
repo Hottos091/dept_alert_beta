@@ -13,26 +13,44 @@ class ContactList extends StatelessWidget {
     // ignore: prefer_const_constructors
     return SingleChildScrollView(
       padding : const EdgeInsets.all(14),
+      clipBehavior: Clip.hardEdge,
       child: BlocConsumer<ContactListBloc, ContactListState>(
-        builder: (context, state) {//state is a List<Contact> 
-          return ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(14),
-            itemCount: state.contacts.length,
-            itemBuilder: (context, index) {
-              return Card (
-                child: ListTile(
-                  title: Text(state.contacts[index].firstname),
-                  onTap: () => context.read<ContactListBloc>().add(ContactListContactDeleted(contactId: state.contacts[index].id)),
+      builder: (context, state) {//state is a List<Contact> 
+        return ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(14),
+          itemCount: state.contacts.length,
+          itemBuilder: (context, index) {
+            return Card (
+              child: ListTile(
+                  title: Text('${state.contacts[index].firstname} ${state.contacts[index].lastname}'),
+                  subtitle: Text('${state.contacts[index].emailAddress} (${state.contacts[index].id}'),
+                  trailing: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () => Navigator.pushNamed(context, '/update', arguments: state.contacts[index]),
+                        //() => Navigator.of(context).pushNamed('/update', arguments: state.contacts[index]),
+                        //context.read<ContactListBloc>().add(ContactListContactUpdating(contact: state.contacts[index])),
+                        icon: const Icon(Icons.update),
+                      ),
+                      IconButton(
+                        onPressed: () => context.read<ContactListBloc>().add(ContactListContactDeleted(contactId: state.contacts[index].id)),
+                        icon: const Icon(Icons.cancel),
+                      ),
+                    ],
+                  )
                 ),
-              );
-            },
-          );
-        },
-        listener: (context, state) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            );
+          },
+        );
+      },
+      listener: (context, state) { 
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Action performed !"),
-          duration: Duration(milliseconds: 800),
+          duration: Duration(milliseconds: 450),
           ));
         }
       )

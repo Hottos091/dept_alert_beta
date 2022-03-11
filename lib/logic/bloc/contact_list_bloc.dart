@@ -10,10 +10,11 @@ class ContactListBloc extends Bloc<ContactEvent, ContactListState> {
   ContactListBloc() : super(const ContactListState.initial()){
     on<ContactListContactAdded>((event, emit) {
       final List<Contact> newState = List.of(state.contacts);
+      
       if(event.contact != null) {
           newState.add(event.contact!);
       }
-      emit(ContactListState(contacts: newState, status: ListStatus.success));
+      emit(ContactListState(contacts: newState, status: ListStatus.loaded));
     });
 
     on<ContactListContactDeleted>((event, emit) {
@@ -24,8 +25,16 @@ class ContactListBloc extends Bloc<ContactEvent, ContactListState> {
     on<ContactListContactUpdated>((event, emit) {
       final List<Contact>updatedList = List.of(state.contacts);
       updatedList[event.contact!.id] = event.contact!;
+      ///TODO CHANGE METHOD FOR 'List.Where'. This will cause error :
+      ///if an user is added after an user has been deleted, id-1 won't be equal to index anymore
+      ///with List.Where, List.of(state.contacts) 
+      ///=> List.Where(contact.id == event.contactToUpdate.id ?? contact : event.contactToUpdate)
 
       emit(ContactListState.success(updatedList));
+    });
+
+    on<ContactListContactLoading>((event, emit){
+      emit(const ContactListState.loading());
     });
   }
   

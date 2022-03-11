@@ -7,22 +7,25 @@ import 'package:dept_alert_beta/widgets/contacts_list.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NewContactScreen extends StatefulWidget {
-  final String title;
-  final Contact? contactToUpdate;
+import '../../logic/bloc/contact_list_state.dart';
 
-  const NewContactScreen({Key? key, required this.title, this.contactToUpdate}) : super(key: key);
+//TODO SEPARATE LIST FROM ADD/UPDATE SCREEN -> USE BOOLEAN 'isUpdate'
+class UpdateContactScreen extends StatefulWidget {
+  final String title;
+  final Contact contactToUpdate;
+
+  const UpdateContactScreen({Key? key, required this.title, required this.contactToUpdate}) : super(key: key);
 
   @override
-  State<NewContactScreen> createState() => _NewContactScreenState();
+  State<UpdateContactScreen> createState() => _UpdateContactScreen();
 }
 
-class _NewContactScreenState extends State<NewContactScreen> {
+class _UpdateContactScreen extends State<UpdateContactScreen> {
   late TextEditingController firstnameTextEditingController;
   late TextEditingController lastnameTextEditingController;
   late TextEditingController emailAddressTextEditingController;
 
-  _NewContactScreenState();
+  _UpdateContactScreen();
 
   @override
   void initState() {
@@ -36,20 +39,31 @@ class _NewContactScreenState extends State<NewContactScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
-        body: Column(children: [
-          getInputContent(),
-          TextButton(
-            child: const Text('Confirmer', style: TextStyle(color: Colors.blue)),
-            onPressed: () {
-              addContact();
-            },
-          ),
-          const ContactList(),
-        ],
-      ),
-    );
+    ListStatus listStatus = BlocProvider.of<ContactListBloc>(context).state.status;
+    
+    switch(listStatus) {
+      case ListStatus.loading:
+        return const CircularProgressIndicator();
+      
+      case ListStatus.loaded:
+        return Scaffold(
+          appBar: AppBar(title: Text(widget.title)),
+          body: Column(children: [
+            getInputContent(),
+            TextButton(
+              child: const Text('Update', style: TextStyle(color: Colors.blue)),
+              onPressed: () {
+                updateContact();
+              },
+            ),
+            //const ContactList(),
+          ],
+        ),
+      );
+
+      default:
+        throw Exception();
+    }
   }
 
   /*Future<void> addContactDb() async {
@@ -58,12 +72,14 @@ class _NewContactScreenState extends State<NewContactScreen> {
     await DatabaseClient.instance.insertContact(contact);
   }*/
 
-  void addContact() async {
-    Contact newContact = Contact(id: Contact.contactCpt, firstname: getFirstname(), lastname: getLastname(), emailAddress: getEmailAddress());
-    print('[addContactBloc] New contact : $newContact');
+  void updateContact() async {
+    print("[BEFORE UPDATE]\n====\n${widget.contactToUpdate}\n===");
+    Contact updatedContact = Contact(id: widget.contactToUpdate.id, firstname: getFirstname(), lastname: getLastname(), emailAddress: getEmailAddress());
+    print("[AFTER UPDATE]\n====\n${widget.contactToUpdate}\n===");
+    BlocProvider.of<ContactListBloc>(context).add(ContactListContactUpdated(contact: updatedContact));
 
-    
-    BlocProvider.of<ContactListBloc>(context).add(ContactListContactAdded(contact: newContact));//TODO : change to ContactListContactAdding. in short, emit an adding event before added event
+    Navigator.of(context).pop();
+    //TODO : change to ContactListContactAdding. in short, emit an adding event before added event
   }
 
   Card getInputContent() {//TODO create a "class extends StatelessWidget" with this
@@ -98,6 +114,12 @@ class _NewContactScreenState extends State<NewContactScreen> {
     return card;
   }
   
+  void fillInputFieldsWithContactData(Contact contactToUpdate) {
+    firstnameTextEditingController.text = contactToUpdate.firstname;
+    lastnameTextEditingController.text = contactToUpdate.lastname;
+    emailAddressTextEditingController.text = contactToUpdate.emailAddress;
+  }
+    
   String getFirstname() => firstnameTextEditingController.text;
 
   String getLastname() => lastnameTextEditingController.text;

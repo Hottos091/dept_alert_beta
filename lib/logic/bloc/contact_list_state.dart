@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../model/contact.dart';
 
-enum ListStatus {loading, success, failure}
+enum ListStatus {loading, loaded, failure}
 
 class ContactListState extends Equatable {
   final ListStatus status;
@@ -21,7 +21,7 @@ class ContactListState extends Equatable {
   const ContactListState.loading() : this._();
 
   const ContactListState.success(List<Contact> contacts)
-    : this._(status: ListStatus.success, contacts: contacts);
+    : this._(status: ListStatus.loaded, contacts: contacts);
   
   const ContactListState.failure() : this._(status: ListStatus.failure);
 
