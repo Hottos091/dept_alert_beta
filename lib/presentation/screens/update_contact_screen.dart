@@ -46,31 +46,29 @@ class _UpdateContactScreen extends State<UpdateContactScreen> {
         return const CircularProgressIndicator();
       
       case ListStatus.loaded:
-        return Scaffold(
+        final scaffold =  Scaffold(
           appBar: AppBar(title: Text(widget.title)),
-          body: Column(children: [
-            getInputContent(),
-            TextButton(
-              child: const Text('Update', style: TextStyle(color: Colors.blue)),
-              onPressed: () {
-                updateContact();
-              },
-            ),
-            //const ContactList(),
-          ],
-        ),
-      );
+          body: Column(
+            children: [
+              getInputContent(),
+              TextButton(
+                child: const Text('Update', style: TextStyle(color: Colors.blue)),
+                onPressed: () {
+                  updateContact();
+                },
+              ),
+              //const ContactList(),
+            ],
+          ),
+        );
+        
+        fillInputFieldsWithContactData(widget.contactToUpdate);
+        return scaffold;
 
       default:
         throw Exception();
     }
   }
-
-  /*Future<void> addContactDb() async {
-    Contact contact = Contact(firstname: getFirstname(), lastname: getLastname(), emailAddress: getEmailAddress());
-    print('[IN] AddContact() : contact.id = ${contact.id}');
-    await DatabaseClient.instance.insertContact(contact);
-  }*/
 
   void updateContact() async {
     print("[BEFORE UPDATE]\n====\n${widget.contactToUpdate}\n===");
