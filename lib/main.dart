@@ -9,7 +9,9 @@ import 'logic/bloc/contact_list_bloc.dart';
 import 'model/contact.dart';
 
 Future<void> main() async {
-  
+  //TODO : CREATE A NEW CUBIT THAT WILL SUBSCRIBE TO CONTACTBLOC. ONE OF THIS NEW CUBIT ATTRIBUTE WILL BE 'contactLastId'
+  //And it will keep track of the last id from the list. We'll later save the blocs and cubits as JSON with Hydrated bloc if possible.  If not, with firebase or sqlite
+  //TODO #2 :  handle data persistance associated with flutter_bloc >= 8.0.0
   WidgetsFlutterBinding.ensureInitialized();
 
   // ignore: unused_local_variable
